@@ -21,7 +21,7 @@ build-prod:
 	@sed                                     \
 	    -e 's|{NAME}|$(MODULE)|g'            \
 	    -e 's|{VERSION}|$(VERSION)|g'        \
-	    prod.Dockerfile | docker build -t $(IMAGE):$(VERSION) -f- .
+	    base.Dockerfile | docker build -t $(IMAGE):$(VERSION) -f- .
 
 
 build-base:
