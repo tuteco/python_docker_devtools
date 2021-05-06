@@ -3,7 +3,7 @@
 MODULE := python-docker-devtools
 
 # Where to push the docker image.
-REGISTRY ?= registry.hub.docker.com/tuteco
+REGISTRY ?= tuteco
 
 IMAGE := $(REGISTRY)/$(MODULE)
 

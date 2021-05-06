@@ -7,7 +7,20 @@
  
  -- data & knowledge experts --                              
 ```
-(c) 2021 tuteco GmbH
+![DOCKER_BUILD](https://img.shields.io/github/workflow/status/tuteco/python-docker-devtools/publish_docker_image?label=Docker-Build&style=for-the-badge)
 
 # python_docker_devtools
 Base image for containerized, python based database tasks.
+
+get the image from [docker hub](https://hub.docker.com/r/tuteco/python-docker-devtools)
+
+```{bash}
+docker pull tuteco/python-docker-devtools
+```
+
+Usage in your Dockerfile
+```
+FROM tuteco/python-docker-devtools
+```
+
+(c) 2021 tuteco GmbH
