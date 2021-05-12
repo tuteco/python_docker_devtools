@@ -1,58 +1,45 @@
-
 # The binary to build (just the basename).
-MODULE := python-docker-devtools
+REPONAME := python-docker-devtools
 
-# Where to push the docker image.
-REGISTRY ?= tuteco
+# Where to push the container image.
+DOCKER_HUB_USER ?= tuteco
 
-IMAGE := $(REGISTRY)/$(MODULE)
+IMAGE_NAME := $(DOCKER_HUB_USER)/$(REPONAME)
 
-# This version-strategy uses git tags to set the version string
-TAG := $(shell git describe --tags --always --dirty)
+# determine the development version by git tag
+LOCAL_VERSION := $(shell git describe --tags --always --dirty)
 
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+.PHONY: help build-local shell version docker-clean
 
-# Example: make build-prod VERSION=1.0.0
-build-prod:
-	@echo "\n${BLUE}Building Production image with labels:\n"
-	@echo "name: $(MODULE)"
-	@echo "version: $(VERSION)${NC}\n"
-	@sed                                     \
-	    -e 's|{NAME}|$(MODULE)|g'            \
-	    -e 's|{VERSION}|$(VERSION)|g'        \
-	    base.Dockerfile | docker build -t $(IMAGE):$(VERSION) -f- .
+.DEFAULT:
+	help
 
+help: version
+	@echo " "
+	@echo "Please use \`make <target>\` where <target is one of:"
+	@echo "  build-local    create the container for local dev purpose with PyCharm"
+	@echo "  shell          start the local container interactively"
+	@echo "  docker-clean   remove local containers"
+	@echo ""
 
-build-base:
-	@echo "\n${BLUE}Building Development image with labels:\n"
-	@echo "name: $(MODULE)"
-	@echo "version: $(TAG)${NC}\n"
-	@sed                                 \
-	    -e 's|{NAME}|$(MODULE)|g'        \
-	    -e 's|{VERSION}|$(TAG)|g'        \
-	    base.Dockerfile | docker build -t $(IMAGE):$(TAG) -f- .
+build-local:
+	@echo "Building Development image with labels:"
+	./container/gen_container.sh $(IMAGE_NAME) $(LOCAL_VERSION)
 
-# Example: make shell CMD="-c 'date > datefile'"
-shell: build-base
-	@echo "\n${BLUE}Launching a shell in the containerized build environment...${NC}\n"
+# Example: make shell PYVER="3.9" CMD="-c 'date > datefile'"
+shell:
+	@echo "Launching a shell in the containerized build environment..."
 		@docker run                                                 \
 			-ti                                                     \
 			--rm                                                    \
 			--entrypoint /bin/bash                                  \
 			-u $$(id -u):$$(id -g)                                  \
-			$(IMAGE):$(TAG)										    \
+			$(IMAGE_NAME)-$(PYVER):$(LOCAL_VERSION)										    \
 			$(CMD)
 
-# Example: make push VERSION=0.0.2
-push: build-prod
-	@echo "\n${BLUE}Pushing image to GitHub Docker Registry...${NC}\n"
-	@docker push $(IMAGE):$(VERSION)
-
 version:
-	@echo $(TAG)
-
-.PHONY: build-base docker-clean build-prod push
+	@echo "current local version is set to:"
+	@echo $(LOCAL_VERSION)
 
 docker-clean:
 	@docker system prune -f --filter "label=name=$(MODULE)"

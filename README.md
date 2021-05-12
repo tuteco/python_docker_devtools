@@ -10,6 +10,8 @@
 [![publish_docker_image](https://github.com/tuteco/python_docker_devtools/actions/workflows/publish_docker_image.yaml/badge.svg)](https://github.com/tuteco/python_docker_devtools/actions/workflows/publish_docker_image.yaml)
 
 # python_docker_devtools
+!! For development purpose only !!
+
 Base image for containerized, python based database tasks.
 
 get the image from [docker hub](https://hub.docker.com/r/tuteco/python-docker-devtools)
