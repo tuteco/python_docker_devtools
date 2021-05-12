@@ -17,9 +17,10 @@ LOCAL_VERSION := $(shell git describe --tags --always --dirty)
 help: version
 	@echo " "
 	@echo "Please use \`make <target>\` where <target is one of:"
-	@echo "  build-local    create the container for local dev purpose with PyCharm"
-	@echo "  shell          start the local container interactively"
-	@echo "  docker-clean   remove local containers"
+	@echo "  build-local          create the container for local dev purpose with PyCharm"
+	@echo "  shell PYVER=\"3.9\"  start the local container interactively"
+	@echo "  shell PYVER=\"3.9\" CMD=\"-c 'command'\" start the local container with a command"
+	@echo "  docker-clean         remove local containers"
 	@echo ""
 
 build-local:
@@ -33,8 +34,7 @@ shell:
 			-ti                                                     \
 			--rm                                                    \
 			--entrypoint /bin/bash                                  \
-			-u $$(id -u):$$(id -g)                                  \
-			$(IMAGE_NAME)-$(PYVER):$(LOCAL_VERSION)										    \
+			$(IMAGE_NAME)-$(PYVER):$(LOCAL_VERSION)				    \
 			$(CMD)
 
 version:

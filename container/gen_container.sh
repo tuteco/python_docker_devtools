@@ -41,6 +41,9 @@ do
 
   echo "building ${IMAGE_NAME}-${VERSION} ..."
 
+  # cleanup previous created files
+  rm ./$VERSION/*
+
   #build the source image tag where docker images is based upon
   TAG=$VERSION$VARIANT
 
@@ -61,6 +64,8 @@ do
 
   # get the detailed version from the container and create a version file
   docker run -ti --rm --entrypoint /bin/bash "${IMAGE_NAME}-${VERSION}:${LOCAL_VERSION}" \
-  -c 'python --version' > "${PYVER_FILE}" && mv "${PYVER_FILE}" ./${VERSION}/`tail -n 1 "${PYVER_FILE}" | sed 's/ /_/g'`
+  -c 'python --version' > "${PYVER_FILE}"
 
+  #todo: remove \r at the end of the filename
+  mv "${PYVER_FILE}" ./${VERSION}/`tail -n 1 "${PYVER_FILE}" | sed 's/\\n/\n/g' | sed 's/ /_/g'`
 done
