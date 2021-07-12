@@ -16,8 +16,16 @@ Base image for containerized, python based database tasks.
 
 get the image from [docker hub](https://hub.docker.com/r/tuteco/python-docker-devtools)
 
+currently build for versions:
+- 3.8
+- 3.9
+- 3.10
 ```{bash}
-docker pull tuteco/python-docker-devtools
+docker pull tuteco/python-docker-devtools-3.8
+
+docker pull tuteco/python-docker-devtools-3.9
+
+docker pull tuteco/python-docker-devtools-3.10
 ```
 
 Usage in your Dockerfile

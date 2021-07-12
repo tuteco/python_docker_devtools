@@ -31,13 +31,14 @@ dockerfile_header() {
 }
 
 # sort version numbers with highest first
+# shellcheck disable=SC2034
 VSORT=$'\n'; VERSIONS=( $(echo "${VERSIONS[*]}" | sort -rV) ); unset VSORT
 
 # process the versions to be build
 for VERSION in "${VERSIONS[@]}"
 do
   #process only version number files
-  [ -d "$VERSION" -a "$VERSION" != "container" ] || continue
+  [ -d "$VERSION" ] && [ "$VERSION" != "container" ] || continue
 
   echo "building ${IMAGE_NAME}-${VERSION} ..."
 
@@ -67,5 +68,5 @@ do
   -c 'python --version' > "${PYVER_FILE}"
 
   #todo: remove \r at the end of the filename
-  mv "${PYVER_FILE}" ./${VERSION}/`tail -n 1 "${PYVER_FILE}" | sed 's/\\n/\n/g' | sed 's/ /_/g'`
+  mv "${PYVER_FILE}" ./"${VERSION}"/"$(tail -n 1 "${PYVER_FILE}" | sed 's/\\n/\n/g' | sed 's/ /_/g')"
 done
